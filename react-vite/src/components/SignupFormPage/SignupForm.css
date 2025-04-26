@@ -1,0 +1,94 @@
+.signup-page-wrapper {
+  min-height: 100vh;
+  background-color: #f8f8f8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 100px 20px 40px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.signup-page-wrapper h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 20px;
+}
+
+.signup-form {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  padding: 30px 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Layout for First/Last name fields */
+.name-fields {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.signup-form label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.signup-form input {
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: border 0.2s ease-in-out;
+}
+
+.signup-form input:focus {
+  outline: none;
+  border-color: #db8ed1;
+  box-shadow: 0 0 0 2px rgba(219, 142, 209, 0.2);
+}
+
+.signup-form button {
+  background-color: #db8ed1;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.signup-form button:hover {
+  background-color: #c26dbb;
+}
+
+.error {
+  color: #e53935;
+  font-size: 13px;
+  margin-top: -8px;
+  margin-bottom: 6px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 500px) {
+  .name-fields {
+    flex-direction: column;
+  }
+}

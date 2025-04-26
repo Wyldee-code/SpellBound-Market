@@ -1,0 +1,94 @@
+/* Modal Container */
+.signup-modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 400px;
+  margin: auto;
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+  color: white;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Modal Header */
+.signup-modal h1 {
+  margin-bottom: 30px;
+  font-size: 2em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Form Styles */
+.signup-modal form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels & Inputs */
+.signup-modal label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.signup-modal input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+}
+
+.signup-modal input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.signup-modal input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Button */
+.signup-modal button {
+  margin-top: 15px;
+  padding: 12px;
+  background: goldenrod;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.signup-modal button:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.signup-modal button:hover:not(:disabled) {
+  background: #daa520;
+  transform: scale(1.05);
+}
+
+/* Error Text */
+.signup-modal .error {
+  color: #ff6b6b;
+  font-size: 14px;
+  margin-top: 4px;
+}

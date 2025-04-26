@@ -1,0 +1,170 @@
+/* Cart Icon Hover */
+.shopping-cart:hover {
+    border: 2px solid #00c853;
+    background-color: #00c853;
+    color: white;
+  }
+
+  /* Main Dropdown Container */
+  .cart-dropdown {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 30%;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+    z-index: 999;
+  }
+
+  .cart-dropdown.hidden {
+    transform: translateX(100%);
+  }
+
+  /* Cart Close Button */
+  .close-cart {
+    align-self: flex-start;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+
+  .close-cart:hover {
+    color: #f44336;
+  }
+
+  /* Empty Cart Styling */
+  .empty-cart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding-top: 80px;
+    text-align: center;
+  }
+
+  .empty-cart img {
+    width: 70%;
+    max-width: 250px;
+    opacity: 0.8;
+  }
+
+  .empty-card-header {
+    font-size: 18px;
+    color: #555;
+    font-weight: bold;
+  }
+
+  /* Cart Header Info */
+  .cart-restaurant {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .cart-restaurant-address {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 30px;
+  }
+
+  .cart-quantity {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    color: #444;
+  }
+
+  /* Item List & Individual Entries */
+  .cart-item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .item-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+  }
+
+  .item-entry-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .item-entry-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    font-size: 16px;
+  }
+
+  .item-entry-delete:hover {
+    color: #f44336;
+  }
+
+  /* Cart Total */
+  .cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: bold;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+  }
+
+  /* Cart Buttons */
+  .cart-buttons {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cart-buttons button {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .cart-checkout {
+    background-color: black;
+    color: white;
+  }
+
+  .cart-checkout:hover {
+    background-color: #333;
+    border-color: white;
+  }
+
+  .back-to-main-button {
+    background-color: transparent;
+    color: #7a00cc;
+    border: 2px solid #7a00cc;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .back-to-main-button:hover {
+    background-color: #7a00cc;
+    color: white;
+  }

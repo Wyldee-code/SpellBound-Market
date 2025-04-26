@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background-color: #f6f5fa;
+}
+
+/* Modal Background */
+#modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  background: rgba(20, 20, 35, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#modal-background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: transparent;
+  z-index: 1;
+}
+
+/* Modal Content Wrapper */
+#modal-content {
+  z-index: 2;
+  background: linear-gradient(145deg, #2e2c4f, #3e3c63);
+  padding: 32px;
+  border-radius: 18px;
+  box-shadow: 0 0 25px rgba(205, 173, 255, 0.2);
+  max-width: 420px;
+  width: 90%;
+  animation: fadeIn 0.4s ease-in-out;
+  color: #fff;
+}
+
+/* Modal Form Layout */
+.login-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.login-modal h1 {
+  color: #ffdc80;
+  font-size: 2.1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+}
+
+.login-modal label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #fdfdfd;
+  align-self: flex-start;
+  margin-left: 5%;
+}
+
+.login-modal input {
+  width: 90%;
+  padding: 12px;
+  margin-bottom: 18px;
+  border: 1px solid #b8a8e4;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fdfdfd;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.login-modal input:focus {
+  outline: none;
+  border-color: #ffcc99;
+  box-shadow: 0 0 6px #ffcc99;
+}
+
+/* Button Styles */
+.login-modal-button,
+.demo-login-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: linear-gradient(120deg, #f7c28b, #de8db9);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-modal-button:hover,
+.demo-login-button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 8px #f7c28b;
+}
+
+.login-modal-button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Error Text */
+.error-text {
+  color: #ff8888;
+  font-size: 0.85rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+/* Close Modal Button */
+.close-modal-button {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,68 @@
+/* Profile button icon */
+.profile-icon-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #db8ed1; /* Spellbound purple */
+    transition: transform 0.2s ease;
+  }
+
+  .profile-icon-button:hover {
+    transform: scale(1.1);
+    color: #a95cc0; /* Lighter mystical variant */
+  }
+
+  /* Dropdown container */
+  .profile-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    background: linear-gradient(145deg, #1f1b2e, #302c44);
+    border: 1px solid #4b3d66;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    padding: 12px 0;
+    list-style: none;
+    min-width: 180px;
+    z-index: 999;
+  }
+
+  /* Each item in the dropdown */
+  .profile-dropdown li {
+    padding: 10px 20px;
+    color: #f3e9ff;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .profile-dropdown li:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Profile info display */
+  .profile-info {
+    font-weight: 500;
+    color: #e0caff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Logout button */
+  .dropdown-logout-button {
+    width: 100%;
+    background: none;
+    border: none;
+    color: #ff8b94;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: left;
+    padding: 10px 20px;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .dropdown-logout-button:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ff5f6d;
+  }

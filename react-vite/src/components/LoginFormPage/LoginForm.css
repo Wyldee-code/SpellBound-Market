@@ -1,0 +1,102 @@
+/* src/components/LoginFormPage/LoginFormPage.css */
+
+/* Font Import */
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap');
+
+/* Page Wrapper */
+.login-page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e4d7f5, #f9e5f2);
+  font-family: 'Josefin Sans', sans-serif;
+  padding: 20px;
+}
+
+/* Form Card */
+.login-form-card {
+  background-color: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Title */
+.login-form-card h1 {
+  font-size: 2.4rem;
+  color: #6a1b9a;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+/* Labels & Inputs */
+.login-form-card label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 15px;
+}
+
+.login-form-card input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border 0.2s ease;
+}
+
+.login-form-card input:focus {
+  border-color: #9c27b0;
+  outline: none;
+}
+
+/* Buttons */
+.login-form-card button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.login-modal-button {
+  background: linear-gradient(135deg, #ab47bc, #7b1fa2);
+  color: white;
+  font-weight: bold;
+}
+
+.login-modal-button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #9c27b0, #6a1b9a);
+}
+
+.demo-login-button {
+  background-color: #fce4ec;
+  color: #880e4f;
+  font-weight: bold;
+}
+
+.demo-login-button:hover {
+  background-color: #f8bbd0;
+}
+
+/* Error Styling */
+.error-text {
+  color: #d32f2f;
+  font-size: 14px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  text-align: left;
+}

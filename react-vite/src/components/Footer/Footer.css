@@ -1,0 +1,29 @@
+#footer-logo-text {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111;
+  letter-spacing: 1px;
+}
+
+/* Optional: if you had a multi-color logo text */
+#logo-eats-text {
+  color: #b065c7; /* Spellbound Market brand color */
+}
+
+.footer-list a:hover,
+.footer-list div:hover {
+  color: #b065c7;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+#footerModal button:hover {
+  color: #b065c7;
+  text-decoration: underline;
+}
+
+.footer-links a {
+  color: #b065c7;
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
