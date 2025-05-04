@@ -18,12 +18,14 @@ if (import.meta.env.MODE !== "production") {
   window.sessionActions = sessionActions;
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <ReduxProvider store={store}>
-      <ShoppingCartProvider>
-        <RouterProvider router={router} />
-      </ShoppingCartProvider>
-    </ReduxProvider>
-  </React.StrictMode>
-);
+store.dispatch(sessionActions.restoreUser()).then(() => {
+  ReactDOM.createRoot(document.getElementById("root")).render(
+    <React.StrictMode>
+      <ReduxProvider store={store}>
+        <ShoppingCartProvider>
+          <RouterProvider router={router} />
+        </ShoppingCartProvider>
+      </ReduxProvider>
+    </React.StrictMode>
+  );
+});

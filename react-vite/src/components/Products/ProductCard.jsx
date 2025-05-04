@@ -4,7 +4,7 @@ import "./ProductCard.css";
 
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
-  const { addItemToCart } = useShoppingCart();
+  const { addToCart } = useShoppingCart(); // ✅ assuming you're using this in context
 
   const handleCardClick = () => {
     navigate(`/products/${product.id}`);
@@ -12,21 +12,13 @@ export default function ProductCard({ product }) {
 
   const handleAddToCart = (e) => {
     e.stopPropagation(); // 🛑 Prevent navigating on button click
-    addItemToCart({
-      menu_item: {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        restaurantId: 1, // or map accordingly if your structure differs
-      },
-      quantity: 1,
-    });
+    addToCart(product); // ✅ just use product directly
   };
 
   return (
     <div className="product-card" onClick={handleCardClick}>
       <img
-        src={product.image_url || "/default-image.png"}
+        src={product.imageUrl || "/default-image.png"} // ✅ camelCase for consistency
         alt={product.name}
         className="product-card-img"
       />

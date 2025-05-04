@@ -1,26 +1,29 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCookie } from "../../utils/csrf";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProductsThunk } from "../../redux/product";
 import { useShoppingCart } from "../../context/ShoppingCart";
 import "./ProductsPage.css";
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState([]);
-  const [favorites, setFavorites] = useState([]);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.session.user);
+  const products = useSelector((state) =>
+    Object.values(state.product?.allProducts || {}) // ✅ Matches your Redux state key
+  );
   const { addToCart } = useShoppingCart();
 
+  const [favorites, setFavorites] = useState([]);
+
   useEffect(() => {
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
+    dispatch(getAllProductsThunk());
 
     fetch("/api/favorites", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setFavorites(data.map((fav) => fav.product_id)));
-  }, []);
+  }, [dispatch]);
 
   const toggleFavorite = async (id) => {
     const csrfToken = getCookie("csrf_token");
@@ -50,7 +53,7 @@ export default function ProductsPage() {
       },
     });
     if (res.ok) {
-      setProducts((prev) => prev.filter((p) => p.id !== id));
+      dispatch(getAllProductsThunk());
     }
   };
 
@@ -73,7 +76,7 @@ export default function ProductsPage() {
             onClick={() => navigate(`/products/${product.id}`)}
           >
             <img
-              src={product.image_url || "/product-placeholder.jpg"}
+              src={product.imageUrl || "/SpellBound Market Place Holder.png"} // 
               alt={product.name}
               className="product-img"
             />

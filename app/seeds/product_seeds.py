@@ -13,7 +13,7 @@ def seed_products():
             type="crystals",
             price=14.99,
             description="A raw amethyst crystal for spiritual protection and peace.",
-            image_url="https://example.com/amethyst.jpg",
+            image_url="/Amethyst.jpg",  # ✅ Exact match from /public folder
             user_id=1,
             created_at=datetime.datetime.now(),
             updated_at=datetime.datetime.now()
@@ -23,7 +23,7 @@ def seed_products():
             type="home_decor",
             price=29.99,
             description="Handmade brass wall art featuring the phases of the moon.",
-            image_url="https://example.com/moonphase.jpg",
+            image_url="/moon phase wallhanging.png",  # ✅ Exact match
             user_id=2,
             created_at=datetime.datetime.now(),
             updated_at=datetime.datetime.now()

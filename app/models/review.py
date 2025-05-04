@@ -22,7 +22,7 @@ class Review(db.Model):
         nullable=False
     )
 
-    user = db.relationship("User", backref="reviews")
+    user = db.relationship("User", back_populates="reviews")  # <-- changed
     product = db.relationship("Product", back_populates="reviews")
 
     def to_dict(self):

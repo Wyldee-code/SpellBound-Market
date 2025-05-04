@@ -1,3 +1,5 @@
+// src/components/ProductCards/ProductCardOwner.jsx
+
 import { useNavigate } from "react-router-dom";
 import { useShoppingCart } from "../../../context/ShoppingCart";
 import { useSelector } from "react-redux";
@@ -10,7 +12,14 @@ export default function ProductCardOwner({ product, onDelete }) {
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
-    addToCart(product);
+    addToCart({
+      menu_item: {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+      },
+      quantity: 1,
+    });
   };
 
   const inCart = cart.some((item) => item.menu_item?.id === product.id);
@@ -25,11 +34,10 @@ export default function ProductCardOwner({ product, onDelete }) {
       <div className="product-info">
         <h3>{product.name}</h3>
         <p className="price">${product.price?.toFixed(2)}</p>
-        <p className="tags">{product.category}</p>
 
         <div className="card-buttons">
           <button
-            className={`add-to-cart-btn ${inCart ? "bounce" : ""}`}
+            className={`add-to-cart-btn ${inCart ? "in-cart" : ""}`}
             onClick={handleAddToCart}
           >
             {inCart ? "In Cart" : "Add to Cart"}

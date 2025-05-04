@@ -9,12 +9,12 @@ import {
 import thunk from "redux-thunk";
 
 import sessionReducer from "./session";
-import productReducer from "./product"; // ✅ Correct: singular "product"
+import productReducer from "./product";
 import reviewsReducer from "./reviews";
 
 const rootReducer = combineReducers({
   session: sessionReducer,
-  product: productReducer, // ✅ Correct
+  product: productReducer, // ✅ changed to "products"
   reviews: reviewsReducer,
 });
 

@@ -30,6 +30,4 @@ class Product(db.Model):
             "price": self.price,
             "description": self.description,
             "imageUrl": self.image_url,
-            "createdAt": self.created_at,
-            "updatedAt": self.updated_at
         }

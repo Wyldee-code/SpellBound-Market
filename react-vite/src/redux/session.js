@@ -16,7 +16,20 @@ const removeUser = () => ({
   type: REMOVE_USER
 });
 
-// ✅ Thunk: Authenticate (check session)
+// ✅ Thunk: Restore User Session (used on app load)
+export const restoreUser = () => async (dispatch) => {
+  try {
+    const res = await fetch("/api/auth", { credentials: "include" });
+    if (res.ok) {
+      const data = await res.json();
+      dispatch(setUser(data));
+    }
+  } catch (err) {
+    console.error("🔥 Error restoring user:", err);
+  }
+};
+
+// ✅ Thunk: Authenticate (session check, optional)
 export const thunkAuthenticate = () => async (dispatch) => {
   try {
     const res = await fetch("/api/auth/", { credentials: "include" });

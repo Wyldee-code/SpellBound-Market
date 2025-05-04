@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     favorites = db.relationship("Favorite", back_populates="user", cascade="all, delete-orphan")
     cart_items = db.relationship("CartItem", back_populates="user", cascade="all, delete-orphan")
     products = db.relationship("Product", back_populates="user", cascade="all, delete-orphan")
-    reviews = db.relationship("Review", backref="user", cascade="all, delete-orphan")
+    reviews = db.relationship("Review", back_populates="user", cascade="all, delete-orphan")  # ✅ Fixed here
 
     # DO NOT return self.hashed_password here!
     @property

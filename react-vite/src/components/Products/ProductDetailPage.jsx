@@ -5,16 +5,16 @@ import {
   thunkCreateReview,
   getReviewsForProductThunk,
   deleteReviewThunk,
-  updateReviewThunk
+  updateReviewThunk,
+  selectReviewsByProduct,
 } from "../../redux/reviews";
-import { selectReviewsByProduct } from "../../redux/reviews";
 import { useShoppingCart } from "../../context/ShoppingCart";
 import "./ProductDetailPage.css";
 
 export default function ProductDetailPage() {
   const { productId } = useParams();
   const dispatch = useDispatch();
-  const { addItemToCart } = useShoppingCart();
+  const { addToCart } = useShoppingCart();
   const sessionUser = useSelector((state) => state.session.user);
 
   const [product, setProduct] = useState(null);
@@ -25,7 +25,9 @@ export default function ProductDetailPage() {
   const [editRating, setEditRating] = useState(0);
   const [editComment, setEditComment] = useState("");
 
-  const reviews = useSelector((state) => selectReviewsByProduct(state, parseInt(productId)));
+  const reviews = useSelector((state) =>
+    selectReviewsByProduct(state, parseInt(productId))
+  );
 
   useEffect(() => {
     fetch(`/api/products/${productId}`)
@@ -38,12 +40,7 @@ export default function ProductDetailPage() {
   }, [productId, dispatch]);
 
   const handleAddToCart = () => {
-    addItemToCart({
-      product_id: product.id,
-      name: product.name,
-      price: product.price,
-      image_url: product.image_url
-    });
+    addToCart(product); // ✅ directly use product
   };
 
   const handleSubmitReview = async (e) => {
@@ -56,7 +53,7 @@ export default function ProductDetailPage() {
     const reviewData = {
       comment,
       rating,
-      product_id: product.id
+      product_id: product.id,
     };
 
     const result = await dispatch(thunkCreateReview(reviewData));
@@ -81,10 +78,12 @@ export default function ProductDetailPage() {
       return;
     }
 
-    const result = await dispatch(updateReviewThunk(editingReviewId, {
-      rating: editRating,
-      comment: editComment
-    }));
+    const result = await dispatch(
+      updateReviewThunk(editingReviewId, {
+        rating: editRating,
+        comment: editComment,
+      })
+    );
 
     if (result) {
       setErrors(Array.isArray(result) ? result : [result]);
@@ -104,7 +103,11 @@ export default function ProductDetailPage() {
   return (
     <div className="product-detail-page">
       <div className="product-header">
-        <img src={product.image_url || "/placeholder.jpg"} alt={product.name} className="product-image" />
+        <img
+          src={product.imageUrl || "/placeholder.jpg"} // ✅ camelCase
+          alt={product.name}
+          className="product-image"
+        />
         <div className="product-info">
           <h1>{product.name}</h1>
           <p className="product-price">${product.price?.toFixed(2)}</p>
@@ -117,6 +120,7 @@ export default function ProductDetailPage() {
 
       <div className="reviews-section">
         <h2>Reviews</h2>
+
         {sessionUser && (
           <form className="review-form" onSubmit={handleSubmitReview}>
             <div className="stars-select">
@@ -155,8 +159,10 @@ export default function ProductDetailPage() {
           {reviews.map((review) => (
             <div key={review.id} className="review-card">
               <div className="review-header">
-                <strong>{review?.user?.username}</strong> - {Array(review.rating).fill("⭐").join("")}
+                <strong>{review?.user?.username}</strong> -{" "}
+                {Array(review.rating).fill("⭐").join("")}
               </div>
+
               {editingReviewId === review.id ? (
                 <>
                   <textarea
@@ -177,15 +183,21 @@ export default function ProductDetailPage() {
                     ))}
                   </div>
                   <button onClick={handleUpdateReview}>Save</button>
-                  <button onClick={() => setEditingReviewId(null)}>Cancel</button>
+                  <button onClick={() => setEditingReviewId(null)}>
+                    Cancel
+                  </button>
                 </>
               ) : (
                 <>
                   <p>{review.comment}</p>
                   {sessionUser?.id === review.user_id && (
                     <div className="review-actions">
-                      <button onClick={() => handleEditReview(review)}>Edit</button>
-                      <button onClick={() => handleDeleteReview(review.id)}>Delete</button>
+                      <button onClick={() => handleEditReview(review)}>
+                        Edit
+                      </button>
+                      <button onClick={() => handleDeleteReview(review.id)}>
+                        Delete
+                      </button>
                     </div>
                   )}
                 </>

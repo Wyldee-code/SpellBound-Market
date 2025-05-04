@@ -39,7 +39,7 @@ function Navigation() {
         {/* Left Section */}
         <div className="navbar-left">
           <NavLink to="/" className="logo-link">
-            <img src="/spellbound-logo.png" alt="Spellbound Market" className="logo" />
+            <img src="/Logo.png" alt="Spellbound Market" className="logo" />
           </NavLink>
           <h1 className="site-title">🔮 Spellbound Market</h1>
         </div>

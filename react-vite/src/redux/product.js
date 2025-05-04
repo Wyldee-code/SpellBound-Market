@@ -16,8 +16,6 @@ const setSingleProduct = (product) => ({
 });
 
 // Thunks
-
-// Load all products
 export const getAllProductsThunk = () => async (dispatch) => {
   try {
     const res = await fetch("/api/products");
@@ -25,14 +23,14 @@ export const getAllProductsThunk = () => async (dispatch) => {
       const data = await res.json();
       dispatch(loadProducts(data.products));
     } else {
-      console.error("Failed to load products.");
+      const err = await res.json();
+      console.error("❌ Failed to load products:", err);
     }
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("❌ Error fetching products:", error);
   }
 };
 
-// Load one product
 export const getSingleProductThunk = (id) => async (dispatch) => {
   try {
     const res = await fetch(`/api/products/${id}`);
@@ -40,10 +38,11 @@ export const getSingleProductThunk = (id) => async (dispatch) => {
       const data = await res.json();
       dispatch(setSingleProduct(data));
     } else {
-      console.error("Failed to fetch single product.");
+      const err = await res.json();
+      console.error("❌ Failed to fetch single product:", err);
     }
   } catch (error) {
-    console.error("Error fetching single product:", error);
+    console.error("❌ Error fetching single product:", error);
   }
 };
 
@@ -56,11 +55,11 @@ const initialState = {
 export default function productReducer(state = initialState, action) {
   switch (action.type) {
     case LOAD_PRODUCTS: {
-      const newState = { allProducts: {}, singleProduct: null };
+      const allProducts = {};
       action.products.forEach((product) => {
-        newState.allProducts[product.id] = product;
+        allProducts[product.id] = product;
       });
-      return newState;
+      return { ...state, allProducts };
     }
     case SET_SINGLE_PRODUCT:
       return { ...state, singleProduct: action.product };
