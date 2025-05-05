@@ -14,32 +14,32 @@ from .api.image_routes import image_routes
 from .api.cart_routes import cart_routes
 from .api.review_routes import review_routes
 from .api.product_routes import product_routes
-from .seeds import seed_commands
+from .seeds import seed_commands, seed_users, seed_products, seed_reviews, seed_favorites
 from .config import Config
 
 def run_migrations_and_seed(app):
     if os.environ.get("RUN_MIGRATIONS") == "true":
-        print("🛠️ Running database migrations and checking seeds...")
+        print("🛠️ Running database migrations and checking for seed...")
 
         with app.app_context():
             try:
                 upgrade()
 
+                # Avoid reseeding if demo user exists
                 demo_user = User.query.filter_by(email="demo@aa.io").first()
                 if demo_user:
-                    print("✅ Demo user already exists. Skipping seeding.")
+                    print("✅ Demo user exists — skipping seed.")
                     return
 
-                print("🌱 Seeding base data (users, products, reviews, favorites)...")
-                from app.seeds import seed_users, seed_products, seed_reviews, seed_favorites
+                print("🌱 Seeding users, products, reviews, and favorites...")
                 seed_users()
                 seed_products()
                 seed_reviews()
                 seed_favorites()
-                print("✅ Seeding complete!")
+                print("✅ Seeding complete.")
 
             except Exception as e:
-                print(f"❌ Migration/seed error: {e}")
+                print(f"❌ Error during migration/seed: {e}")
 
 def create_app():
     print("🔮 Creating Spellbound Market app...")
@@ -60,7 +60,7 @@ def create_app():
     Migrate(app, db)
     CORS(app, supports_credentials=True)
 
-    # Register blueprints
+    # Register API routes
     app.register_blueprint(user_routes, url_prefix='/api/users')
     app.register_blueprint(auth_routes, url_prefix='/api/auth')
     app.register_blueprint(product_routes, url_prefix='/api/products')
@@ -76,7 +76,7 @@ def create_app():
             url = request.url.replace('http://', 'https://', 1)
             return redirect(url, code=301)
 
-    # CSRF Protection
+    # CSRF cookie injection
     @app.after_request
     def inject_csrf_token(response):
         response.set_cookie(
@@ -88,11 +88,12 @@ def create_app():
         )
         return response
 
-    # API Routes
+    # CSRF test route
     @app.route("/api/csrf/restore")
     def restore_csrf():
         return {"message": "CSRF cookie set"}
 
+    # API documentation route
     @app.route("/api/docs")
     def api_docs():
         acceptable_methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
@@ -105,12 +106,12 @@ def create_app():
             if rule.endpoint != 'static'
         }
 
-    # Serve React Frontend
+    # Serve React app
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
     def serve_react(path):
         if path == 'favicon.ico':
-            return app.send_from_directory('public', 'favicon.ico')
+            return app.send_from_directory('public', 'crystallball.ico')  # updated to match your file
         return app.send_static_file('index.html')
 
     @app.errorhandler(404)
