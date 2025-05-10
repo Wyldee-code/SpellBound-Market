@@ -24,6 +24,7 @@ export default function ProductDetailPage() {
   const [editingReviewId, setEditingReviewId] = useState(null);
   const [editRating, setEditRating] = useState(0);
   const [editComment, setEditComment] = useState("");
+  const [quantity, setQuantity] = useState(1); // ⬅️ NEW
 
   const reviews = useSelector((state) =>
     selectReviewsByProduct(state, parseInt(productId))
@@ -44,7 +45,8 @@ export default function ProductDetailPage() {
   }, [productId, dispatch]);
 
   const handleAddToCart = () => {
-    addToCart(product);
+    if (!product || quantity < 1) return;
+    addToCart(product, quantity); // ⬅️ updated to include quantity
   };
 
   const handleSubmitReview = async (e) => {
@@ -116,9 +118,24 @@ export default function ProductDetailPage() {
           <h1>{product.name}</h1>
           <p className="product-price">${product.price?.toFixed(2)}</p>
           <p>{product.description}</p>
-          <button className="add-to-cart-btn" onClick={handleAddToCart}>
-            Add to Cart
-          </button>
+
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              style={{
+                width: "60px",
+                padding: "5px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+              }}
+            />
+            <button className="add-to-cart-btn" onClick={handleAddToCart}>
+              Add {quantity > 1 ? `${quantity} to Cart` : "to Cart"}
+            </button>
+          </div>
         </div>
       </div>
 

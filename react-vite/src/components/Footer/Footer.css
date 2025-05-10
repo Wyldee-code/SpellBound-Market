@@ -1,29 +1,114 @@
-#footer-logo-text {
-  font-size: 28px;
-  font-weight: 700;
-  color: #111;
-  letter-spacing: 1px;
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: #f6f2f8;
+  padding: 20px 30px;
+  font-size: 13px;
+  color: #444;
+  border-top: 1px solid #e2d4f0;
+  margin-top: 40px;
 }
 
-/* Optional: if you had a multi-color logo text */
-#logo-eats-text {
-  color: #b065c7; /* Spellbound Market brand color */
+.footer-left {
+  flex: 1;
+  min-width: 200px;
+}
+
+#footer-logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #7a00cc;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.footer-description {
+  color: #666;
+  font-size: 12px;
+  max-width: 220px;
+  margin-top: 4px;
+}
+
+/* Right columns */
+.footer-links {
+  display: flex;
+  gap: 30px;
+  justify-content: flex-end;
+}
+
+.footer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer-right-header {
+  font-weight: 600;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: #222;
+}
+
+.footer-list div,
+.footer-list a {
+  font-size: 13px;
+  color: #555;
 }
 
 .footer-list a:hover,
 .footer-list div:hover {
   color: #b065c7;
-  cursor: pointer;
   text-decoration: underline;
 }
 
-#footerModal button:hover {
-  color: #b065c7;
-  text-decoration: underline;
+.footer-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
 }
 
 .footer-links a {
-  color: #b065c7;
-  font-size: 18px;
-  transition: transform 0.2s ease;
+  color: #7a00cc;
+  font-size: 15px;
+}
+
+.footer-links a:hover {
+  color: #ff6f61;
+}
+
+.footer-bottom {
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  margin-top: 14px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .footer-left,
+  .footer-links {
+    width: 100%;
+  }
+
+  .footer-bottom {
+    text-align: left;
+    margin-top: 10px;
+  }
 }

@@ -126,3 +126,92 @@ ul {
     font-size: 1.8rem;
   }
 }
+
+/* 🌐 Responsive Container and Grid Enhancements */
+.container,
+.page-content,
+.main-content {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+/* 🧱 Flexbox Layout Tweaks */
+.flex-col,
+.flex-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* 📱 Mobile-First Grid */
+@media (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  .product-card-img {
+    height: 180px;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .products-header,
+  .product-card-info,
+  .reviews-section,
+  .layout-wrapper {
+    padding: 16px;
+  }
+
+  .product-card-img {
+    height: 160px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-card-img {
+    height: 140px;
+  }
+
+  .products-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+  }
+
+  h1, h2 {
+    text-align: center;
+  }
+}

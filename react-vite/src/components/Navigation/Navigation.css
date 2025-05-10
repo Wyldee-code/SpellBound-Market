@@ -51,34 +51,46 @@
   font-size: 2.4rem;
   font-weight: 700;
   color: #db8ed1;
+  white-space: nowrap;
 }
 
 /* Middle Search Bar */
 .navbar-middle {
   display: flex;
   align-items: center;
-  gap: 20px;
   flex: 2;
   justify-content: center;
-  flex-wrap: wrap;
 }
 
 .search-bar {
   position: relative;
+  width: 100%;
+  max-width: 400px;
 }
 
 .search-bar input {
-  padding: 10px 16px;
+  padding: 10px 16px 10px 38px; /* leave space for icon */
   border: 1px solid #ccc;
   border-radius: 30px;
   font-size: 14px;
   background-color: #fafafa;
   outline: none;
   transition: border-color 0.3s ease;
+  width: 100%;
 }
 
 .search-bar input:focus {
   border-color: #db8ed1;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 14px;
+  pointer-events: none;
 }
 
 /* Right Buttons */
@@ -87,6 +99,7 @@
   align-items: center;
   gap: 20px;
   flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
 /* Cart */
@@ -120,6 +133,7 @@
   font-weight: 600;
   color: #333;
   font-size: 0.95rem;
+  white-space: nowrap;
 }
 
 /* Auth & Nav Links */
@@ -148,7 +162,6 @@
   background-color: #ff6f61;
 }
 
-/* Logout */
 .logout-btn {
   background-color: #f44336;
   color: white;
@@ -163,7 +176,6 @@
   background-color: #d32f2f;
 }
 
-/* Dashboard */
 .dashboard-link {
   padding: 6px 14px;
   border-radius: 20px;
@@ -177,31 +189,68 @@
   background-color: #ff6f61;
 }
 
-/* Responsive Styles */
+/* --- Responsive Styles --- */
 @media (max-width: 1024px) {
   .site-title {
     font-size: 2rem;
   }
 
   .navbar-middle {
-    display: none;
+    flex: 100%;
+    order: 3;
+    margin-top: 10px;
+    justify-content: center;
+  }
+
+  .search-bar {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  .search-bar input {
+    width: 100%;
+  }
+
+  .navbar-right {
+    justify-content: flex-end;
+    width: 100%;
+    gap: 15px;
   }
 }
 
 @media (max-width: 768px) {
   .navbar-container {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
+    align-items: stretch;
+    gap: 20px;
+    padding: 14px 20px;
+  }
+
+  .navbar-left {
+    justify-content: space-between;
+    width: 100%;
   }
 
   .navbar-right {
-    width: 100%;
-    justify-content: flex-end;
     flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    gap: 12px;
   }
 
   .site-title {
-    text-align: left;
+    font-size: 1.8rem;
+  }
+
+  .search-bar input {
+    font-size: 1rem;
+  }
+
+  .dashboard-link,
+  .logout-btn,
+  .signup-button {
+    width: 100%;
+    text-align: center;
   }
 }

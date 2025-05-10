@@ -44,11 +44,11 @@ function Navigation() {
           <h1 className="site-title">🔮 Spellbound Market</h1>
         </div>
 
-        {/* Middle Section (Optional for Search/Navigation) */}
+        {/* Middle Section */}
         <div className="navbar-middle">
           <div className="search-bar">
+            <i className="fa fa-search search-icon"></i>
             <input type="text" placeholder="Search crystals, art, magic..." />
-            <i className="fa fa-search"></i>
           </div>
         </div>
 

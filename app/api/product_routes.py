@@ -1,10 +1,19 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, send_from_directory
 from ..models import db, Product
-from ..forms import ProductForm
 from flask_login import login_required, current_user
+from werkzeug.utils import secure_filename
 import datetime
+import os
 
 product_routes = Blueprint('products', __name__)
+
+UPLOAD_FOLDER = "public"
+DEFAULT_IMAGE_URL = "/public/SpellBound Market Place Holder.png"
+
+# ✅ Serve static files from public folder
+@product_routes.route('/public/<path:filename>')
+def serve_public_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
 
 # ✅ GET all products
 @product_routes.route('/')
@@ -24,51 +33,79 @@ def get_product(id):
 @product_routes.route('/create', methods=['POST'])
 @login_required
 def create_product():
-    form = ProductForm()
-    form['csrf_token'].data = request.cookies['csrf_token']
+    name = request.form.get("name")
+    type = request.form.get("type")
+    price = request.form.get("price")
+    description = request.form.get("description")
+    image = request.files.get("image")
 
-    if form.validate_on_submit():
-        product = Product(
-            name=form.data['name'],
-            type=form.data['type'],
-            price=form.data['price'],
-            description=form.data['description'],
-            image_url=form.data['image_url'],
-            user_id=current_user.id,
-            created_at=datetime.datetime.now(),
-            updated_at=datetime.datetime.now()
-        )
-        db.session.add(product)
-        db.session.commit()
-        return product.to_dict(), 201
+    errors = {}
 
-    return {"errors": form.errors}, 400
+    if not name:
+        errors["name"] = ["Name is required."]
+    if not type:
+        errors["type"] = ["Type is required."]
+    if not price or not price.replace('.', '', 1).isdigit():
+        errors["price"] = ["Valid price is required."]
+
+    image_url = DEFAULT_IMAGE_URL
+
+    if image:
+        filename = secure_filename(image.filename)
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        image.save(filepath)
+        image_url = f"/public/{filename}"
+
+    if errors:
+        return {"errors": errors}, 400
+
+    new_product = Product(
+        name=name,
+        type=type,
+        price=float(price),
+        description=description,
+        image_url=image_url,
+        user_id=current_user.id,
+        created_at=datetime.datetime.utcnow(),
+        updated_at=datetime.datetime.utcnow()
+    )
+
+    db.session.add(new_product)
+    db.session.commit()
+    return new_product.to_dict(), 201
 
 # ✅ UPDATE a product
 @product_routes.route('/<int:id>/update', methods=['PUT'])
 @login_required
 def update_product(id):
-    form = ProductForm()
-    form['csrf_token'].data = request.cookies['csrf_token']
-
     product = Product.query.get(id)
     if not product:
         return {"error": "Product not found"}, 404
     if product.user_id != current_user.id:
         return {"error": "Unauthorized"}, 403
 
-    if form.validate_on_submit():
-        product.name = form.data['name']
-        product.type = form.data['type']
-        product.price = form.data['price']
-        product.description = form.data['description']
-        product.image_url = form.data['image_url']
-        product.updated_at = datetime.datetime.now()
+    name = request.form.get("name")
+    type = request.form.get("type")
+    price = request.form.get("price")
+    description = request.form.get("description")
+    image = request.files.get("image")
 
-        db.session.commit()
-        return product.to_dict()
+    if name: product.name = name
+    if type: product.type = type
+    if price: product.price = float(price)
+    if description: product.description = description
+    if image:
+        filename = secure_filename(image.filename)
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        image.save(filepath)
+        product.image_url = f"/public/{filename}"
 
-    return {"errors": form.errors}, 400
+    product.updated_at = datetime.datetime.utcnow()
+
+    db.session.commit()
+    return product.to_dict()
 
 # ✅ DELETE a product
 @product_routes.route('/<int:id>/delete', methods=['DELETE'])

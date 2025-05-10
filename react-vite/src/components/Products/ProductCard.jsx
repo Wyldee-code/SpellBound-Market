@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useShoppingCart } from "../../../context/ShoppingCart";
 import "./ProductCard.css";
@@ -5,6 +6,7 @@ import "./ProductCard.css";
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
   const { addToCart } = useShoppingCart();
+  const [quantity, setQuantity] = useState(1);
 
   const handleCardClick = () => {
     navigate(`/products/${product.id}`);
@@ -12,7 +14,8 @@ export default function ProductCard({ product }) {
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
-    addToCart(product); // ✅ Pass the full product object, as expected
+    if (quantity < 1) return;
+    addToCart(product, quantity);
   };
 
   return (
@@ -25,9 +28,17 @@ export default function ProductCard({ product }) {
       <div className="product-card-info">
         <h3>{product.name}</h3>
         <p className="product-price">${product.price?.toFixed(2)}</p>
-        <div className="product-card-buttons">
+
+        <div className="product-card-buttons" onClick={(e) => e.stopPropagation()}>
+          <input
+            type="number"
+            min="1"
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+            className="quantity-input"
+          />
           <button className="add-to-cart-mini" onClick={handleAddToCart}>
-            Add to Cart
+            Add {quantity > 1 ? `${quantity} to Cart` : "to Cart"}
           </button>
         </div>
       </div>

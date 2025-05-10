@@ -1,61 +1,76 @@
 .product-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: flex;
-    flex-direction: column;
-  }
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
 
-  .product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-  }
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
 
-  .product-card-img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
+.product-card-img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  transition: transform 0.3s ease;
+}
 
-  .product-card-info {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    flex: 1;
-  }
+.product-card-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
 
-  .product-card-info h3 {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: 0 0 8px;
-    color: #333;
-  }
+.product-card-info h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 0 8px;
+  color: #333;
+}
 
-  .product-price {
-    color: #7a00cc;
-    font-weight: bold;
-    font-size: 1rem;
-    margin-bottom: 10px;
-  }
+.product-price {
+  color: #7a00cc;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
 
-  .product-card-buttons {
-    margin-top: auto;
-  }
+.product-card-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
 
-  .add-to-cart-mini {
-    background-color: #7a00cc;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: background-color 0.2s ease;
-  }
+.add-to-cart-mini {
+  background-color: #7a00cc;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
 
-  .add-to-cart-mini:hover {
-    background-color: #580099;
-  }
+.add-to-cart-mini:hover {
+  background-color: #580099;
+}
+
+.quantity-input {
+  width: 60px;
+  padding: 6px;
+  font-size: 14px;
+  margin-right: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
