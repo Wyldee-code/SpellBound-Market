@@ -1,19 +1,11 @@
-from flask import Blueprint, request, send_from_directory
+from flask import Blueprint, request, jsonify
 from ..models import db, Product
 from flask_login import login_required, current_user
-from werkzeug.utils import secure_filename
 import datetime
-import os
 
 product_routes = Blueprint('products', __name__)
 
-UPLOAD_FOLDER = "public"
-DEFAULT_IMAGE_URL = "/public/SpellBound Market Place Holder.png"
-
-# ✅ Serve static files from public folder
-@product_routes.route('/public/<path:filename>')
-def serve_public_file(filename):
-    return send_from_directory(UPLOAD_FOLDER, filename)
+DEFAULT_IMAGE_URL = "/SpellBound Market Place Holder.png"
 
 # ✅ GET all products
 @product_routes.route('/')
@@ -37,6 +29,7 @@ def create_product():
     type = request.form.get("type")
     price = request.form.get("price")
     description = request.form.get("description")
+    use_default = request.form.get("useDefault")  # optional flag
     image = request.files.get("image")
 
     errors = {}
@@ -48,17 +41,13 @@ def create_product():
     if not price or not price.replace('.', '', 1).isdigit():
         errors["price"] = ["Valid price is required."]
 
-    image_url = DEFAULT_IMAGE_URL
-
-    if image:
-        filename = secure_filename(image.filename)
-        filepath = os.path.join(UPLOAD_FOLDER, filename)
-        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-        image.save(filepath)
-        image_url = f"/public/{filename}"
-
     if errors:
         return {"errors": errors}, 400
+
+    image_url = DEFAULT_IMAGE_URL
+    if image and not use_default:
+        # ignore saving; always use default image to prevent deployment issues
+        image_url = DEFAULT_IMAGE_URL
 
     new_product = Product(
         name=name,
@@ -96,11 +85,8 @@ def update_product(id):
     if price: product.price = float(price)
     if description: product.description = description
     if image:
-        filename = secure_filename(image.filename)
-        filepath = os.path.join(UPLOAD_FOLDER, filename)
-        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-        image.save(filepath)
-        product.image_url = f"/public/{filename}"
+        # Ignore image saving in production
+        product.image_url = DEFAULT_IMAGE_URL
 
     product.updated_at = datetime.datetime.utcnow()
 
