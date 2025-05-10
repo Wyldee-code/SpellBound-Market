@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => {
       open: true,
       proxy: {
         "/api": {
-          target: "http://127.0.0.1:9000",
+          target: "http://localhost:9000",
           changeOrigin: true,
         },
       },

@@ -11,11 +11,13 @@ import thunk from "redux-thunk";
 import sessionReducer from "./session";
 import productReducer from "./product";
 import reviewsReducer from "./reviews";
+import favoritesReducer from "./favorites"; // ✅ new
 
 const rootReducer = combineReducers({
   session: sessionReducer,
   product: productReducer, // ✅ changed to "products"
   reviews: reviewsReducer,
+  favorites: favoritesReducer, // ✅ add here
 });
 
 let enhancer;

@@ -1,46 +1,36 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCookie } from "../../utils/csrf";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsThunk } from "../../redux/product";
+import { fetchFavorites, toggleFavorite } from "../../redux/favorites";
 import { useShoppingCart } from "../../context/ShoppingCart";
 import "./ProductsPage.css";
 
 export default function ProductsPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.session.user);
-  const products = useSelector((state) =>
-    Object.values(state.product?.allProducts || {}) // ✅ Matches your Redux state key
-  );
   const { addToCart } = useShoppingCart();
 
-  const [favorites, setFavorites] = useState([]);
+  const { user, loaded } = useSelector((state) => state.session);
+  const products = useSelector((state) =>
+    Object.values(state.product?.allProducts || {})
+  );
+  const { items: favorites, loading: favLoading, error: favError } = useSelector(
+    (state) => state.favorites
+  );
+
+  const [favoriteMessage, setFavoriteMessage] = useState("");
 
   useEffect(() => {
     dispatch(getAllProductsThunk());
+    if (loaded && user) dispatch(fetchFavorites());
+  }, [dispatch, loaded, user]);
 
-    fetch("/api/favorites", { credentials: "include" })
-      .then((res) => res.json())
-      .then((data) => setFavorites(data.map((fav) => fav.product_id)));
-  }, [dispatch]);
-
-  const toggleFavorite = async (id) => {
-    const csrfToken = getCookie("csrf_token");
-
-    const res = await fetch(`/api/favorites/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": csrfToken,
-      },
-      credentials: "include",
-    });
-
-    if (res.ok) {
-      const updated = await res.json();
-      setFavorites(updated.map((fav) => fav.product_id));
-    }
+  const handleFavorite = async (productId) => {
+    await dispatch(toggleFavorite(productId));
+    const isNowFavorite = favorites[productId] === undefined ? true : false;
+    setFavoriteMessage(isNowFavorite ? "Added to favorites 💖" : "Removed from favorites 💔");
+    setTimeout(() => setFavoriteMessage(""), 2000);
   };
 
   const handleDelete = async (id) => {
@@ -49,13 +39,20 @@ export default function ProductsPage() {
       method: "DELETE",
       credentials: "include",
       headers: {
-        "X-CSRF-Token": getCookie("csrf_token"),
+        "X-CSRF-Token": document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("csrf_token"))
+          ?.split("=")[1],
       },
     });
     if (res.ok) {
       dispatch(getAllProductsThunk());
     }
   };
+
+  if (!loaded) return <div>Loading products...</div>;
+
+  const favoriteList = Object.values(favorites || {});
 
   return (
     <div className="products-page">
@@ -68,6 +65,10 @@ export default function ProductsPage() {
         )}
       </div>
 
+      {favoriteMessage && (
+        <div className="favorite-toast">{favoriteMessage}</div>
+      )}
+
       <div className="product-grid">
         {products.map((product) => (
           <div
@@ -76,7 +77,7 @@ export default function ProductsPage() {
             onClick={() => navigate(`/products/${product.id}`)}
           >
             <img
-              src={product.imageUrl || "/SpellBound Market Place Holder.png"} // 
+              src={product.imageUrl || "/SpellBound Market Place Holder.png"}
               alt={product.name}
               className="product-img"
             />
@@ -91,8 +92,8 @@ export default function ProductsPage() {
 
                 {user && (
                   <span
-                    className={`favorite-icon ${favorites.includes(product.id) ? "filled" : ""}`}
-                    onClick={() => toggleFavorite(product.id)}
+                    className={`favorite-icon ${favorites[product.id] ? "filled" : ""}`}
+                    onClick={() => handleFavorite(product.id)}
                   >
                     ♥
                   </span>
@@ -121,6 +122,37 @@ export default function ProductsPage() {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="favorites-section">
+        <h2>Favorited Products</h2>
+        {favLoading ? (
+          <p>Loading favorites...</p>
+        ) : favError ? (
+          <p className="error">{favError}</p>
+        ) : favoriteList.length === 0 ? (
+          <p>You haven’t favorited any products yet.</p>
+        ) : (
+          <div className="product-grid">
+            {favoriteList.map((product) => (
+              <div
+                key={product.id}
+                className="product-card"
+                onClick={() => navigate(`/products/${product.id}`)}
+              >
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="product-img"
+                />
+                <div className="product-info">
+                  <h3>{product.name}</h3>
+                  <p className="price">${product.price?.toFixed(2)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -40,7 +40,7 @@ export default function ProductDetailPage() {
   }, [productId, dispatch]);
 
   const handleAddToCart = () => {
-    addToCart(product); // ✅ directly use product
+    addToCart(product);
   };
 
   const handleSubmitReview = async (e) => {
@@ -104,7 +104,7 @@ export default function ProductDetailPage() {
     <div className="product-detail-page">
       <div className="product-header">
         <img
-          src={product.imageUrl || "/placeholder.jpg"} // ✅ camelCase
+          src={product.imageUrl || "/placeholder.jpg"}
           alt={product.name}
           className="product-image"
         />
@@ -125,14 +125,23 @@ export default function ProductDetailPage() {
           <form className="review-form" onSubmit={handleSubmitReview}>
             <div className="stars-select">
               {[1, 2, 3, 4, 5].map((num) => (
-                <label key={num}>
+                <label key={num} className="star-label">
                   <input
                     type="radio"
                     value={num}
                     checked={rating === num}
                     onChange={() => setRating(num)}
+                    style={{ display: "none" }}
                   />
-                  <span>⭐</span>
+                  <span
+                    style={{
+                      color: num <= rating ? "#FFD700" : "#ccc",
+                      fontSize: "1.5rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    ★
+                  </span>
                 </label>
               ))}
             </div>
@@ -171,14 +180,23 @@ export default function ProductDetailPage() {
                   />
                   <div className="stars-select">
                     {[1, 2, 3, 4, 5].map((num) => (
-                      <label key={num}>
+                      <label key={num} className="star-label">
                         <input
                           type="radio"
                           value={num}
                           checked={editRating === num}
                           onChange={() => setEditRating(num)}
+                          style={{ display: "none" }}
                         />
-                        <span>⭐</span>
+                        <span
+                          style={{
+                            color: num <= editRating ? "#FFD700" : "#ccc",
+                            fontSize: "1.5rem",
+                            cursor: "pointer",
+                          }}
+                        >
+                          ★
+                        </span>
                       </label>
                     ))}
                   </div>

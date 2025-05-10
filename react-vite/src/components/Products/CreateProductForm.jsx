@@ -12,6 +12,8 @@ export default function CreateProductForm() {
   const [errors, setErrors] = useState([]);
   const [success, setSuccess] = useState(false);
 
+  const defaultImageUrl = "/SpellBound Market Place Holder.png";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors([]);
@@ -30,7 +32,7 @@ export default function CreateProductForm() {
         name,
         description,
         price,
-        image_url: imageUrl || null,
+        image_url: imageUrl || defaultImageUrl, // ✅ Fallback to default
       }),
     });
 
@@ -42,6 +44,10 @@ export default function CreateProductForm() {
       const errorData = await res.json();
       setErrors([errorData.message || "Failed to create product"]);
     }
+  };
+
+  const handleUseDefaultImage = () => {
+    setImageUrl(defaultImageUrl);
   };
 
   return (
@@ -99,6 +105,10 @@ export default function CreateProductForm() {
             placeholder="https://example.com/image.jpg"
           />
         </label>
+
+        <button type="button" onClick={handleUseDefaultImage} style={{ marginBottom: "10px" }}>
+          Use Default Image
+        </button>
 
         <button type="submit">Create Product</button>
       </form>

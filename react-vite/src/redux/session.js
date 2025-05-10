@@ -9,11 +9,11 @@ const REMOVE_USER = 'session/removeUser';
 // Action Creators
 const setUser = (user) => ({
   type: SET_USER,
-  payload: user
+  payload: user,
 });
 
 const removeUser = () => ({
-  type: REMOVE_USER
+  type: REMOVE_USER,
 });
 
 // ✅ Thunk: Restore User Session (used on app load)
@@ -23,9 +23,14 @@ export const restoreUser = () => async (dispatch) => {
     if (res.ok) {
       const data = await res.json();
       dispatch(setUser(data));
+    } else {
+      dispatch(removeUser()); // Still mark loaded even if session not found
     }
+    return true; // ✅ allow main.jsx to wait for this
   } catch (err) {
     console.error("🔥 Error restoring user:", err);
+    dispatch(removeUser());
+    return false;
   }
 };
 
@@ -116,15 +121,15 @@ export const thunkLogout = () => async (dispatch) => {
   dispatch(removeUser());
 };
 
-// Reducer
-const initialState = { user: null };
+// ✅ Reducer
+const initialState = { user: null, loaded: false };
 
 export default function sessionReducer(state = initialState, action) {
   switch (action.type) {
     case SET_USER:
-      return { ...state, user: action.payload };
+      return { ...state, user: action.payload, loaded: true };
     case REMOVE_USER:
-      return { ...state, user: null };
+      return { ...state, user: null, loaded: true };
     default:
       return state;
   }

@@ -1,6 +1,4 @@
 import { Link } from 'react-router-dom';
-import SignupFormModal from '../SignupFormModal';
-import OpenModalButton from '../OpenModalButton';
 import { useSelector } from 'react-redux';
 import './Footer.css';
 
@@ -21,14 +19,6 @@ export default function Footer() {
           <div className="footer-list">
             <Link to="/products"><div>Products</div></Link>
             <Link to="/dashboard"><div>Dashboard</div></Link>
-            { !sessionUser && (
-              <div id="footerModal">
-                <OpenModalButton
-                  buttonText="Create an Account"
-                  modalComponent={<SignupFormModal />}
-                />
-              </div>
-            )}
           </div>
         </div>
 

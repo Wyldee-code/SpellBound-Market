@@ -82,8 +82,9 @@ def create_app():
             'csrf_token',
             generate_csrf(),
             secure=os.environ.get('FLASK_ENV') == 'production',
-            samesite='Strict' if os.environ.get('FLASK_ENV') == 'production' else None,
-            httponly=False
+            samesite='Strict' if os.environ.get('FLASK_ENV') == 'production' else 'Lax',
+            httponly=False,
+            path="/"
         )
         return response
 

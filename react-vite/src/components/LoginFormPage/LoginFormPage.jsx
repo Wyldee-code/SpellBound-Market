@@ -2,10 +2,12 @@ import { useState } from "react";
 import { thunkLogin } from "../../redux/session";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
+import { useNavigate } from "react-router-dom"; // ✅ ADD THIS
 import "./LoginForm.css";
 
 function LoginFormModal() {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // ✅ INIT NAVIGATE
   const { closeModal } = useModal();
 
   const [email, setEmail] = useState("");
@@ -20,6 +22,7 @@ function LoginFormModal() {
       setErrors(response);
     } else {
       closeModal();
+      navigate("/"); // ✅ REDIRECT TO MAIN PAGE
     }
   };
 
@@ -36,6 +39,7 @@ function LoginFormModal() {
       setErrors(response);
     } else {
       closeModal();
+      navigate("/"); // ✅ REDIRECT AFTER DEMO LOGIN TOO
     }
   };
 
