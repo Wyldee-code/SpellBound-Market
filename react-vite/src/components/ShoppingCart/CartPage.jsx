@@ -7,7 +7,7 @@ export default function CartPage() {
   const navigate = useNavigate();
 
   const total = cart.reduce(
-    (sum, item) => sum + (item.menu_item?.price || 0) * item.quantity,
+    (sum, item) => sum + (item.product?.price || 0) * item.quantity,
     0
   );
 
@@ -54,7 +54,7 @@ export default function CartPage() {
           <button
             className="back-to-main-button"
             onClick={() =>
-              navigate(`/products/${cart[0].menu_item?.restaurantId}`)
+              navigate(`/products/${cart[0].product?.id}`)
             }
           >
             ← Back to Product
@@ -73,9 +73,9 @@ export default function CartPage() {
               {cart.map((item, idx) => (
                 <li key={idx} className="cart-item">
                   <span>
-                    {item.quantity} × {item.menu_item?.name}
+                    {item.quantity} × {item.product?.name}
                   </span>
-                  <span>${(item.menu_item?.price * item.quantity).toFixed(2)}</span>
+                  <span>${(item.product?.price * item.quantity).toFixed(2)}</span>
                 </li>
               ))}
             </ul>

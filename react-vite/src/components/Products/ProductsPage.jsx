@@ -28,8 +28,8 @@ export default function ProductsPage() {
 
   const handleFavorite = async (productId) => {
     await dispatch(toggleFavorite(productId));
-    const isNowFavorite = favorites[productId] === undefined ? true : false;
-    setFavoriteMessage(isNowFavorite ? "Added to favorites 💖" : "Removed from favorites 💔");
+    const wasFav = !!favorites[productId];
+    setFavoriteMessage(wasFav ? "Removed from favorites 💔" : "Added to favorites 💖");
     setTimeout(() => setFavoriteMessage(""), 2000);
   };
 
@@ -65,9 +65,7 @@ export default function ProductsPage() {
         )}
       </div>
 
-      {favoriteMessage && (
-        <div className="favorite-toast">{favoriteMessage}</div>
-      )}
+      {favoriteMessage && <div className="favorite-toast">{favoriteMessage}</div>}
 
       <div className="product-grid">
         {products.map((product) => (
@@ -86,7 +84,17 @@ export default function ProductsPage() {
               <p className="price">${product.price?.toFixed(2)}</p>
 
               <div className="product-actions" onClick={(e) => e.stopPropagation()}>
-                <button className="add-to-cart-btn" onClick={() => addToCart(product)}>
+                <button
+                  className="add-to-cart-btn"
+                  onClick={() =>
+                    addToCart({
+                      id: product.id,
+                      name: product.name,
+                      price: product.price,
+                      imageUrl: product.imageUrl,
+                    })
+                  }
+                >
                   Add to Cart
                 </button>
 
@@ -141,7 +149,7 @@ export default function ProductsPage() {
                 onClick={() => navigate(`/products/${product.id}`)}
               >
                 <img
-                  src={product.imageUrl}
+                  src={product.imageUrl || "/SpellBound Market Place Holder.png"}
                   alt={product.name}
                   className="product-img"
                 />

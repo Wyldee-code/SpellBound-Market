@@ -15,11 +15,15 @@ class CartItem(db.Model):
     user = db.relationship('User', back_populates='cart_items')
     product = db.relationship('Product')
 
-    def to_dict(self):
-        return {
+    def to_dict(self, include_product=False):
+        data = {
             "id": self.id,
             "user_id": self.user_id,
             "product_id": self.product_id,
             "quantity": self.quantity,
-            "product": self.product.to_dict()  # This assumes your Product model has a .to_dict()
         }
+
+        if include_product:
+            data["product"] = self.product.to_dict() if self.product else None
+
+        return data

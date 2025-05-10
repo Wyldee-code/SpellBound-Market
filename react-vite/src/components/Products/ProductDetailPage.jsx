@@ -29,6 +29,10 @@ export default function ProductDetailPage() {
     selectReviewsByProduct(state, parseInt(productId))
   );
 
+  const userAlreadyReviewed = reviews.some(
+    (r) => r.user_id === sessionUser?.id
+  );
+
   useEffect(() => {
     fetch(`/api/products/${productId}`)
       .then((res) => res.json())
@@ -121,7 +125,7 @@ export default function ProductDetailPage() {
       <div className="reviews-section">
         <h2>Reviews</h2>
 
-        {sessionUser && (
+        {sessionUser && !userAlreadyReviewed && (
           <form className="review-form" onSubmit={handleSubmitReview}>
             <div className="stars-select">
               {[1, 2, 3, 4, 5].map((num) => (
@@ -164,11 +168,15 @@ export default function ProductDetailPage() {
           </form>
         )}
 
+        {sessionUser && userAlreadyReviewed && (
+          <p>You have already reviewed this product.</p>
+        )}
+
         <div className="review-list">
           {reviews.map((review) => (
             <div key={review.id} className="review-card">
               <div className="review-header">
-                <strong>{review?.user?.username}</strong> -{" "}
+                <strong>{review?.user?.username}</strong> —{" "}
                 {Array(review.rating).fill("⭐").join("")}
               </div>
 

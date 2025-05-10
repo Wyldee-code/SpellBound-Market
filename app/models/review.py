@@ -22,7 +22,7 @@ class Review(db.Model):
         nullable=False
     )
 
-    user = db.relationship("User", back_populates="reviews")  # <-- changed
+    user = db.relationship("User", back_populates="reviews")
     product = db.relationship("Product", back_populates="reviews")
 
     def to_dict(self):
@@ -30,6 +30,11 @@ class Review(db.Model):
             "id": self.id,
             "comment": self.comment,
             "rating": self.rating,
+            "user_id": self.user_id,         # ✅ Corrected field
             "product_id": self.product_id,
-            "user_id": self.user_id
+            "user": {
+                "id": self.user.id,
+                "username": self.user.username,
+                "email": self.user.email
+            } if self.user else None
         }

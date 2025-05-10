@@ -6,30 +6,28 @@ import "./ShoppingCart.css";
 export default function ShoppingCart() {
   const navigate = useNavigate();
   const ulRef = useRef();
-  const { cart, setCart, removeItem } = useShoppingCart();
+  const { cart, setCart } = useShoppingCart();
 
   const [showMenu, setShowMenu] = useState(false);
   const [total, setTotal] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    calculateTotal();
-  }, [cart]);
-
-  useEffect(() => {
     fetchCart();
   }, []);
 
   useEffect(() => {
-    if (!showMenu) return;
+    calculateTotal();
+  }, [cart]);
 
+  useEffect(() => {
+    if (!showMenu) return;
     const closeMenu = (e) => {
       if (!ulRef.current) return;
       if (!ulRef.current.contains(e.target)) {
         setShowMenu(false);
       }
     };
-
     document.addEventListener("click", closeMenu);
     return () => document.removeEventListener("click", closeMenu);
   }, [showMenu]);
@@ -47,10 +45,37 @@ export default function ShoppingCart() {
     }
   };
 
+  const addToCart = async (product, quantity = 1) => {
+    try {
+      const res = await fetch("/api/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          product_id: product.id, // ✅ Correct key expected by backend
+          quantity,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Failed to add to cart:", data);
+        return;
+      }
+
+      fetchCart();
+    } catch (err) {
+      console.error("Add to cart error:", err);
+    }
+  };
+
   const calculateTotal = () => {
     let newTotal = 0;
     cart.forEach((item) => {
-      newTotal += (item.menu_item?.price || 0) * item.quantity;
+      newTotal += (item.product?.price || 0) * item.quantity;
     });
     setTotal(newTotal);
   };
@@ -81,7 +106,9 @@ export default function ShoppingCart() {
     <>
       <button className="shopping-cart" onClick={toggleCart}>
         <i className="fa-solid fa-cart-shopping"></i>
-        <div>Cart ({cart.reduce((sum, item) => sum + (item.quantity || 1), 0)})</div>
+        <div>
+          Cart ({cart.reduce((sum, item) => sum + (item.quantity || 1), 0)})
+        </div>
       </button>
 
       {showMenu && (
@@ -89,7 +116,10 @@ export default function ShoppingCart() {
           {isLoaded && cart.length ? (
             <>
               <div className="cart-contents">
-                <button onClick={() => setShowMenu(false)} className="close-cart">
+                <button
+                  onClick={() => setShowMenu(false)}
+                  className="close-cart"
+                >
                   <i className="fa-solid fa-x"></i>
                 </button>
                 <div className="cart-title">Your Cart</div>
@@ -97,9 +127,15 @@ export default function ShoppingCart() {
                 <div className="cart-item-list">
                   {cart.map((item, idx) => (
                     <div className="item-entry" key={idx}>
-                      <div>{item.quantity}× {item.menu_item?.name}</div>
+                      <div>
+                        {item.quantity}× {item.product?.name}
+                      </div>
                       <div className="item-entry-right">
-                        <div>${(item.menu_item?.price * item.quantity).toFixed(2)}</div>
+                        <div>
+                          ${(
+                            (item.product?.price || 0) * item.quantity
+                          ).toFixed(2)}
+                        </div>
                         <button
                           className="item-entry-delete"
                           onClick={(e) => handleDeleteItem(e, item.id)}

@@ -31,20 +31,18 @@ const deleteReview = (reviewId) => ({
 
 // Thunks
 
-// Load all reviews for a product
 export const getReviewsForProductThunk = (productId) => async (dispatch) => {
   try {
     const res = await fetch(`/api/reviews/${productId}`);
     if (res.ok) {
       const data = await res.json();
-      dispatch(loadReviews(data.reviews));
+      dispatch(loadReviews(data)); // ✅ fixed: directly use array
     }
   } catch (error) {
     console.error("Failed to load reviews:", error);
   }
 };
 
-// Create review
 export const thunkCreateReview = (reviewData) => async (dispatch) => {
   try {
     const res = await fetch('/api/reviews', {
@@ -53,13 +51,13 @@ export const thunkCreateReview = (reviewData) => async (dispatch) => {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(reviewData)
+      body: JSON.stringify(reviewData),
     });
 
     const data = await res.json();
 
     if (res.ok) {
-      dispatch(loadReviews([data])); // or a proper dispatch depending on your reducer
+      dispatch(createReview(data));
       return null;
     } else {
       return data.errors || ["Failed to create review"];
@@ -70,7 +68,6 @@ export const thunkCreateReview = (reviewData) => async (dispatch) => {
   }
 };
 
-// Update review
 export const updateReviewThunk = (reviewId, updateData) => async (dispatch) => {
   const csrfToken = getCookie("csrf_token");
 
@@ -99,7 +96,6 @@ export const updateReviewThunk = (reviewId, updateData) => async (dispatch) => {
   }
 };
 
-// Delete review
 export const deleteReviewThunk = (reviewId) => async (dispatch) => {
   const csrfToken = getCookie("csrf_token");
 
@@ -144,7 +140,10 @@ export default function reviewsReducer(state = initialState, action) {
         },
       };
     case DELETE_REVIEW: {
-      const newState = { ...state };
+      const newState = {
+        ...state,
+        reviews: { ...state.reviews },
+      };
       delete newState.reviews[action.reviewId];
       return newState;
     }
@@ -156,4 +155,6 @@ export default function reviewsReducer(state = initialState, action) {
 // Selectors
 export const selectAllReviews = (state) => Object.values(state.reviews.reviews);
 export const selectReviewsByProduct = (state, productId) =>
-  Object.values(state.reviews.reviews).filter(review => review.product_id === productId);
+  Object.values(state.reviews.reviews).filter(
+    (review) => review.product_id === productId
+  );

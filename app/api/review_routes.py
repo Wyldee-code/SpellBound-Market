@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, abort
 from flask_login import login_required, current_user
 from app.models import db, Review, Product, User
 
-# localhost:8000/api/review
+# localhost:9000/api/review
 review_routes = Blueprint('review', __name__)
 
 # GET all reviews

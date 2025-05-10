@@ -4,21 +4,21 @@ import "./ProductCard.css";
 
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
-  const { addToCart } = useShoppingCart(); // ✅ assuming you're using this in context
+  const { addToCart } = useShoppingCart();
 
   const handleCardClick = () => {
     navigate(`/products/${product.id}`);
   };
 
   const handleAddToCart = (e) => {
-    e.stopPropagation(); // 🛑 Prevent navigating on button click
-    addToCart(product); // ✅ just use product directly
+    e.stopPropagation();
+    addToCart(product); // ✅ Pass the full product object, as expected
   };
 
   return (
     <div className="product-card" onClick={handleCardClick}>
       <img
-        src={product.imageUrl || "/default-image.png"} // ✅ camelCase for consistency
+        src={product.imageUrl || "/SpellBound Market Place Holder.png"}
         alt={product.name}
         className="product-card-img"
       />
