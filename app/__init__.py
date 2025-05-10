@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, send_from_directory
 from flask_cors import CORS
 from flask_migrate import Migrate, upgrade
 from flask_wtf.csrf import generate_csrf
@@ -14,7 +14,6 @@ from .api.review_routes import review_routes
 from .api.product_routes import product_routes
 from .seeds import seed_commands, seed_users, seed_products, seed_reviews, seed_favorites
 from .config import Config
-
 
 def run_migrations_and_seed(app):
     if os.environ.get("RUN_MIGRATIONS") == "true":
@@ -39,11 +38,9 @@ def run_migrations_and_seed(app):
             except Exception as e:
                 print(f"❌ Error during migration/seed: {e}")
 
-
 def create_app():
     print("🔮 Creating Spellbound Market app...")
 
-    # Use absolute path for React build
     react_dist_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../react-vite/dist')
     app = Flask(__name__, static_folder=react_dist_path, static_url_path='/')
     app.config.from_object(Config)
@@ -104,11 +101,17 @@ def create_app():
             if rule.endpoint != 'static'
         }
 
+    # ✅ Serve public folder (for uploaded product images)
+    @app.route('/public/<path:filename>')
+    def serve_uploaded_file(filename):
+        return send_from_directory('public', filename)
+
+    # React front-end routes
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
     def serve_react(path):
         if path == 'favicon.ico':
-            return app.send_from_directory('public', 'crystalball.ico')  # ✅ match exact filename
+            return app.send_from_directory('public', 'crystalball.ico')
         return app.send_static_file('index.html')
 
     @app.errorhandler(404)
