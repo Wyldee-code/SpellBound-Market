@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from ..models import db, Product
+from ..models.cart_item import CartItem  # ✅ import CartItem model
 from flask_login import login_required, current_user
 import datetime
 
@@ -7,13 +8,11 @@ product_routes = Blueprint('products', __name__)
 
 DEFAULT_IMAGE_URL = "/SpellBound Market Place Holder.png"
 
-# ✅ GET all products
 @product_routes.route('/')
 def get_all_products():
     products = Product.query.all()
     return {"products": [p.to_dict() for p in products]}
 
-# ✅ GET one product by ID
 @product_routes.route('/<int:id>', methods=['GET'])
 def get_product(id):
     product = Product.query.get(id)
@@ -21,7 +20,6 @@ def get_product(id):
         return {"error": "Product not found"}, 404
     return product.to_dict()
 
-# ✅ CREATE a new product
 @product_routes.route('/create', methods=['POST'])
 @login_required
 def create_product():
@@ -29,11 +27,10 @@ def create_product():
     type = request.form.get("type")
     price = request.form.get("price")
     description = request.form.get("description")
-    use_default = request.form.get("useDefault")  # optional flag
+    use_default = request.form.get("useDefault")
     image = request.files.get("image")
 
     errors = {}
-
     if not name:
         errors["name"] = ["Name is required."]
     if not type:
@@ -46,8 +43,7 @@ def create_product():
 
     image_url = DEFAULT_IMAGE_URL
     if image and not use_default:
-        # ignore saving; always use default image to prevent deployment issues
-        image_url = DEFAULT_IMAGE_URL
+        image_url = DEFAULT_IMAGE_URL  # skip image saving in production
 
     new_product = Product(
         name=name,
@@ -64,7 +60,6 @@ def create_product():
     db.session.commit()
     return new_product.to_dict(), 201
 
-# ✅ UPDATE a product
 @product_routes.route('/<int:id>/update', methods=['PUT'])
 @login_required
 def update_product(id):
@@ -85,15 +80,12 @@ def update_product(id):
     if price: product.price = float(price)
     if description: product.description = description
     if image:
-        # Ignore image saving in production
         product.image_url = DEFAULT_IMAGE_URL
 
     product.updated_at = datetime.datetime.utcnow()
-
     db.session.commit()
     return product.to_dict()
 
-# ✅ DELETE a product
 @product_routes.route('/<int:id>/delete', methods=['DELETE'])
 @login_required
 def delete_product(id):
@@ -103,11 +95,18 @@ def delete_product(id):
     if product.user_id != current_user.id:
         return {"error": "Unauthorized"}, 403
 
-    db.session.delete(product)
-    db.session.commit()
-    return {"message": "Successfully deleted product", "id": id}
+    try:
+        # ✅ Delete related cart items first
+        CartItem.query.filter_by(product_id=product.id).delete()
 
-# ✅ Get current user's products
+        db.session.delete(product)
+        db.session.commit()
+        return {"message": "Successfully deleted product", "id": id}
+    except Exception as e:
+        print("❌ Error during delete:", e)
+        db.session.rollback()
+        return {"error": "Server error during product deletion"}, 500
+
 @product_routes.route('/my-products')
 @login_required
 def get_my_products():
