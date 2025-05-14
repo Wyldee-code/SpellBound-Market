@@ -1,66 +1,116 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import "./CreateProductForm.css"; // ♻️ Reuse styles
+import { useShoppingCart } from "../../context/ShoppingCart";
+import "./EditProductForm.css";
 
 export default function EditProductForm() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { removeFromCart } = useShoppingCart();
+
   const [form, setForm] = useState({
     name: "",
     description: "",
     price: "",
     image_url: "",
   });
+  const [imageFile, setImageFile] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const res = await fetch(`/api/products/${id}`);
-        if (res.ok) {
-          const data = await res.json();
+    fetch(`/api/products/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.error) {
+          setError(data.error);
+        } else {
           setForm({
             name: data.name || "",
             description: data.description || "",
             price: data.price || "",
             image_url: data.image_url || "",
           });
-        } else {
-          setError("Failed to load product.");
         }
-      } catch (err) {
-        console.error("❌ Error loading product:", err);
-        setError("Failed to load product.");
-      }
-    };
-
-    fetchProduct();
+      });
   }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("description", form.description);
+    formData.append("price", form.price);
+    formData.append("_method", "PUT");
+
+    if (imageFile) {
+      formData.append("image", imageFile);
+      formData.append("useDefault", "false");
+    } else {
+      formData.append("useDefault", "true");
+    }
+
     try {
       const res = await fetch(`/api/products/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        method: "POST",
+        body: formData,
       });
+
+      const data = await res.json();
 
       if (res.ok) {
         navigate(`/products/${id}`);
       } else {
-        const data = await res.json();
         setError(data.error || "Failed to update product.");
       }
     } catch (err) {
-      console.error("❌ Error updating product:", err);
       setError("Failed to update product.");
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setForm((prev) => ({
+        ...prev,
+        image_url: URL.createObjectURL(file), // Preview
+      }));
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
+
+    try {
+      const res = await fetch(`/api/products/${id}/delete`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "X-CSRF-Token": document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("csrf_token"))
+            ?.split("=")[1],
+        },
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        removeFromCart(parseInt(id));
+        alert("✅ Product deleted successfully.");
+        navigate("/dashboard");
+      } else {
+        setError(data.error || "Failed to delete product.");
+      }
+    } catch (err) {
+      setError("Server error while deleting product.");
+    }
+  };
+
   return (
-    <div className="create-product-page">
-      <form className="product-form" onSubmit={handleSubmit}>
+    <div className="edit-product-page">
+      <form className="edit-product-form" onSubmit={handleSubmit}>
         <h2>Edit Product</h2>
 
         {error && <p className="error-list">{error}</p>}
@@ -97,15 +147,46 @@ export default function EditProductForm() {
         </label>
 
         <label>
-          Image URL
-          <input
-            type="text"
-            value={form.image_url}
-            onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-          />
+          Upload New Image
+          <input type="file" accept="image/*" onChange={handleImageChange} />
         </label>
 
-        <button type="submit">Update Product</button>
+        {form.image_url && (
+          <img
+            src={form.image_url}
+            alt="Preview"
+            style={{
+              width: "100%",
+              maxHeight: "200px",
+              objectFit: "contain",
+              borderRadius: "10px",
+              marginTop: "10px",
+            }}
+          />
+        )}
+
+        <div className="edit-product-buttons">
+          <button type="submit" className="save-btn">Update Product</button>
+          <button
+            type="button"
+            className="back-button"
+            onClick={() => navigate(-1)}
+          >
+            Cancel and Go Back
+          </button>
+          <button
+            type="button"
+            className="delete-btn"
+            style={{
+              backgroundColor: "#ff4d4d",
+              color: "#fff",
+              marginTop: "10px",
+            }}
+            onClick={handleDelete}
+          >
+            Delete Product
+          </button>
+        </div>
       </form>
     </div>
   );

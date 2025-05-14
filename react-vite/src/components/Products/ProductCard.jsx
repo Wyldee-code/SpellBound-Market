@@ -8,10 +8,6 @@ export default function ProductCard({ product }) {
   const { addToCart } = useShoppingCart();
   const [quantity, setQuantity] = useState(1);
 
-  const handleCardClick = () => {
-    navigate(`/products/${product.id}`);
-  };
-
   const handleAddToCart = (e) => {
     e.stopPropagation();
     if (quantity < 1) return;
@@ -19,14 +15,21 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="product-card" onClick={handleCardClick}>
+    <div className="product-card">
       <img
         src={product.imageUrl || "/SpellBound Market Place Holder.png"}
         alt={product.name}
         className="product-card-img"
+        onClick={() => navigate(`/products/${product.id}`)}
+        style={{ cursor: "pointer" }}
       />
       <div className="product-card-info">
-        <h3>{product.name}</h3>
+        <h3
+          onClick={() => navigate(`/products/${product.id}`)}
+          style={{ cursor: "pointer" }}
+        >
+          {product.name}
+        </h3>
         <p className="product-price">${product.price?.toFixed(2)}</p>
 
         <div className="product-card-buttons" onClick={(e) => e.stopPropagation()}>

@@ -69,18 +69,21 @@ export default function ProductsPage() {
 
       <div className="product-grid">
         {products.map((product) => (
-          <div
-            key={product.id}
-            className="product-card"
-            onClick={() => navigate(`/products/${product.id}`)}
-          >
+          <div key={product.id} className="product-card">
             <img
               src={product.imageUrl || "/SpellBound Market Place Holder.png"}
               alt={product.name}
               className="product-img"
+              onClick={() => navigate(`/products/${product.id}`)}
+              style={{ cursor: "pointer" }}
             />
             <div className="product-info">
-              <h3>{product.name}</h3>
+              <h3
+                onClick={() => navigate(`/products/${product.id}`)}
+                style={{ cursor: "pointer" }}
+              >
+                {product.name}
+              </h3>
               <p className="price">${product.price?.toFixed(2)}</p>
 
               <div className="product-actions" onClick={(e) => e.stopPropagation()}>
@@ -109,7 +112,7 @@ export default function ProductsPage() {
               </div>
 
               {user && user.id === product.user_id && (
-                <div className="product-owner-actions">
+                <div className="product-owner-actions" onClick={(e) => e.stopPropagation()}>
                   <button
                     onClick={() => navigate(`/products/${product.id}/edit`)}
                     className="edit-btn"

@@ -25,14 +25,23 @@ export default function ProductCardOwner({ product, onDelete }) {
   const inCart = cart.some((item) => item.menu_item?.id === product.id);
 
   return (
-    <div className="product-card" onClick={() => navigate(`/products/${product.id}`)}>
+    <div className="product-card">
+      {/* ✅ Only image and title are clickable */}
       <img
         src={product.image_url || "/product-placeholder.jpg"}
         alt={product.name}
         className="product-img"
+        onClick={() => navigate(`/products/${product.id}`)}
+        style={{ cursor: "pointer" }}
       />
+
       <div className="product-info">
-        <h3>{product.name}</h3>
+        <h3
+          onClick={() => navigate(`/products/${product.id}`)}
+          style={{ cursor: "pointer" }}
+        >
+          {product.name}
+        </h3>
         <p className="price">${product.price?.toFixed(2)}</p>
 
         <div className="card-buttons">

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,6 +14,7 @@ import "./ProductDetailPage.css";
 export default function ProductDetailPage() {
   const { productId } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { addToCart } = useShoppingCart();
   const sessionUser = useSelector((state) => state.session.user);
 
@@ -24,7 +25,7 @@ export default function ProductDetailPage() {
   const [editingReviewId, setEditingReviewId] = useState(null);
   const [editRating, setEditRating] = useState(0);
   const [editComment, setEditComment] = useState("");
-  const [quantity, setQuantity] = useState(1); // ⬅️ NEW
+  const [quantity, setQuantity] = useState(1);
 
   const reviews = useSelector((state) =>
     selectReviewsByProduct(state, parseInt(productId))
@@ -46,7 +47,7 @@ export default function ProductDetailPage() {
 
   const handleAddToCart = () => {
     if (!product || quantity < 1) return;
-    addToCart(product, quantity); // ⬅️ updated to include quantity
+    addToCart(product, quantity);
   };
 
   const handleSubmitReview = async (e) => {
@@ -179,9 +180,20 @@ export default function ProductDetailPage() {
                 ))}
               </div>
             )}
-            <button type="submit" className="submit-review-btn">
-              Submit Review
-            </button>
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              <button type="submit" className="submit-review-btn">
+                Submit Review
+              </button>
+              {sessionUser?.id === product.user_id && (
+                <button
+                  type="button"
+                  className="edit-product-btn"
+                  onClick={() => navigate(`/products/${product.id}/edit`)}
+                >
+                  Edit Product
+                </button>
+              )}
+            </div>
           </form>
         )}
 
@@ -226,21 +238,15 @@ export default function ProductDetailPage() {
                     ))}
                   </div>
                   <button onClick={handleUpdateReview}>Save</button>
-                  <button onClick={() => setEditingReviewId(null)}>
-                    Cancel
-                  </button>
+                  <button onClick={() => setEditingReviewId(null)}>Cancel</button>
                 </>
               ) : (
                 <>
                   <p>{review.comment}</p>
                   {sessionUser?.id === review.user_id && (
                     <div className="review-actions">
-                      <button onClick={() => handleEditReview(review)}>
-                        Edit
-                      </button>
-                      <button onClick={() => handleDeleteReview(review.id)}>
-                        Delete
-                      </button>
+                      <button onClick={() => handleEditReview(review)}>Edit</button>
+                      <button onClick={() => handleDeleteReview(review.id)}>Delete</button>
                     </div>
                   )}
                 </>

@@ -42,7 +42,7 @@
   color: #666;
 }
 
-/* Buttons */
+/* Buttons Grouping */
 .product-detail-buttons {
   margin-top: 20px;
   display: flex;
@@ -50,8 +50,10 @@
   flex-wrap: wrap;
 }
 
+/* Shared Button Style */
 .add-to-cart-btn,
-.edit-product-btn {
+.edit-product-btn,
+.submit-review-btn {
   background-color: #7a00cc;
   color: white;
   padding: 10px 18px;
@@ -63,8 +65,13 @@
 }
 
 .add-to-cart-btn:hover,
-.edit-product-btn:hover {
+.edit-product-btn:hover,
+.submit-review-btn:hover {
   background-color: #6200aa;
+}
+
+.edit-product-btn {
+  margin-top: 10px;
 }
 
 .delete-product-btn {
@@ -150,6 +157,7 @@
   color: white;
 }
 
+/* === Stars === */
 .stars-select {
   display: flex;
   gap: 6px;
@@ -159,24 +167,10 @@
   font-size: 24px;
 }
 
-/* === Submit Review Button === */
-.submit-review-btn {
-  background-color: #7a00cc;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.submit-review-btn:hover {
-  background-color: #6200aa;
-}
-
 /* Error messages */
+.form-errors,
 .error-messages {
   color: #ff4d4d;
   font-size: 14px;
+  margin-top: 8px;
 }
